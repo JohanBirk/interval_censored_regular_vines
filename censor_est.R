@@ -210,7 +210,27 @@ censor_est <- function(u, v, cop, rot = 1, method = "censor", check.pars = TRUE)
       objectives %<>% c(optimlist[[i]]$objective)
     }
     if(sum(is.na(objectives)) == length(objectives)){
-      stop("All NA produced by optimize")
+      warning("All NA produced by optimize. Narrowing the parameter search.")
+      ## Using inverse kendall to find better parameters
+      
+      optimlist <- list()
+      objectives <- c()
+      lim_adjust <- 3
+      inv_tau <- VineCopula::BiCopTau2Par(family = cop$fam, cor(u_lower, v_lower, method = "kendall"))
+      for(i in 1:length(cop$optim.limits)){
+        cop$theta <- cop$optim.limits[[i]]$start
+        optimlist %<>% rlist::list.append(optimize(f = ll, maximum = TRUE,
+                                                   interval = c(max(cop$optim.limits[[i]]$low, inv_tau - lim_adjust),
+                                                                min(cop$optim.limits[[i]]$up, inv_tau + lim_adjust))))
+        objectives %<>% c(optimlist[[i]]$objective)
+      }
+      if(sum(is.na(objectives)) == length(objectives)){
+        stop("All NA produced by optimize after narrowed search.")
+      }else{
+        cop$theta <- optimlist[[which.max(objectives)]]$maximum
+        cop$log.lik <- optimlist[[which.max(objectives)]]$objective
+        cop$AIC <- 2*cop$n.param - 2*optimlist[[which.max(objectives)]]$objective
+      }
     }else{
       cop$theta <- optimlist[[which.max(objectives)]]$maximum
       cop$log.lik <- optimlist[[which.max(objectives)]]$objective
