@@ -84,6 +84,9 @@ censor_est.full <- function(u_upper, u_lower, v_upper, v_lower, cop_name, check.
       objectives <- c()
       lim_adjust <- 3
       inv_tau <- VineCopula::BiCopTau2Par(family = cop$fam, cor(u_lower, v_lower, method = "kendall"))
+      if(cop$fam %in% c(3,4,6)){
+        inv_tau <- abs(inv_tau)
+      }
       for(i in 1:length(cop$optim.limits)){
         cop$theta <- cop$optim.limits[[i]]$start
         optimlist %<>% rlist::list.append(optimize(f = ll, maximum = TRUE,

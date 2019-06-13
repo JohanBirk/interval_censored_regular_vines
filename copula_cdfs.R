@@ -447,7 +447,8 @@ get_cop <- function(cop_name){
     # copula_one_param$optim.limits = list(list(low = -1, up = -0.001, start = -0.5),
     #                                      list(low = 0.001, up = 10, start = 1))
     # The VineCopula-package does not support negative values for clayton's
-    copula_one_param$optim.limits = list(list(low = 0.001, up = 25, start = 15))
+    # Also, limits affect the optimization of the clayton copula
+    copula_one_param$optim.limits = list(list(low = 0.001, up = 22, start = 15))
     
     return(copula_one_param)
   }else if(cop_num == 3){
