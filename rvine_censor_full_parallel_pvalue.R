@@ -56,9 +56,9 @@ censor_est.full <- function(u_upper, u_lower, v_upper, v_lower, cop_name, check.
   cop <- get_cop(cop_name)
   ## When conditional data are computed, the data computed from max rank estimated marginals are not always
   ## larger than when computed by min rank estimated marginals.
-  u_up <- pmax(u_upper, u_upper)
+  u_up <- pmax(u_upper, u_lower)
   u_lo <- pmin(u_upper, u_lower)
-  v_up <- pmax(v_upper, v_upper)
+  v_up <- pmax(v_upper, v_lower)
   v_lo <- pmin(v_upper, v_lower)
   
   if(cop$n.param == 1){

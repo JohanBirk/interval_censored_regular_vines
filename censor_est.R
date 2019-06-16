@@ -781,17 +781,31 @@ cop_name2BiCop <- function(cop){
   if(is.na(theta)){
     theta <- 0
   }
-  # 90 degree
-  if(rot == 2){
-    theta <- -theta
-    delta <- -delta
-    family <- family + 20
-  }else if(rot == 3){
-    family <- family + 10
-  }else if(rot == 4){
-    theta <- -theta
-    delta <- -delta
-    family <- family + 30
+  if(family %in% c(104, 204)){
+    if(rot == 2){
+      theta <- -theta
+      delta <- delta
+      family <- family + 20
+    }else if(rot == 3){
+      family <- family + 10
+    }else if(rot == 4){
+      theta <- -theta
+      delta <- delta
+      family <- family + 30
+    }
+  }else{
+    # 90 degree
+    if(rot == 2){
+      theta <- -theta
+      delta <- -delta
+      family <- family + 20
+    }else if(rot == 3){
+      family <- family + 10
+    }else if(rot == 4){
+      theta <- -theta
+      delta <- -delta
+      family <- family + 30
+    }
   }
   return(list(Family = family,
               Par = theta,
